@@ -88,7 +88,7 @@ html, body, #container {
 }
 
 #logo, main {
-    padding: 2rem;
+    padding: 1.8em;
     display: table-cell;
     vertical-align: middle;
     width: 50%;
