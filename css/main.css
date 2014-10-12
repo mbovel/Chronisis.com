@@ -1,0 +1,185 @@
+/*! HTML5 Boilerplate v4.3.0 | MIT License | http://h5bp.com/ */
+
+html,
+button,
+input,
+select,
+textarea {
+    color: #222;
+}
+
+html {
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+audio,
+canvas,
+img,
+video {
+    vertical-align: middle;
+}
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+textarea {
+    resize: vertical;
+}
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+/*
+ * dark blue:  #001
+ * blue:       #039
+ * cyan:       #3c9
+ * orange:     #c96
+ * light cyan: #699
+ */
+
+body {
+    background: #001;
+    color: #699;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.2em;
+    line-height: 1.5;
+}
+
+h1 {
+    font-size: 5em;
+    margin: 0;
+}
+
+html, body, #container {
+    height: 100%;
+}
+
+#container {
+    width: 100%;
+    max-width: 70em;
+    margin: 0 auto;
+    display: table;
+    table-layout: fixed;
+}
+
+#logo, main {
+    padding: 2rem;
+    display: table-cell;
+    vertical-align: middle;
+    width: 50%;
+}
+
+#logo img {
+    max-width: 100%;
+}
+
+#links {
+    padding: 0;
+    list-style: none;
+    padding: 1em;
+    text-align: center;
+}
+
+#links li {
+    display: inline-block;
+}
+
+.icon {
+    text-decoration: none;
+    display: inline-block;
+    width: 9em;
+}
+
+.icon svg {
+    fill: #669999;
+    display: inline-block;
+    height: 100%;
+}
+
+.icon:hover svg {
+    fill: #c96;
+}
+
+.icon-youtube svg {
+    height: 5em;
+}
+
+.icon-facebook svg {
+    height: 4em;
+}
+
+.icon-soundcloud svg {
+    height: 3em;
+}
+
+.not-found main {
+    width: auto;
+    text-align: center;
+}
+
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+
+@media only screen and (max-width: 80em) {
+    body {
+        font-size: 1em;
+    }
+    
+    h1 {
+        font-size: 5em;
+    }
+    
+    #links {
+        font-size: 0.8em;
+    }
+}
+
+@media only screen and (max-width: 60em) {
+    h1 {
+        font-size: 3em;
+    }
+    
+    #links {
+        font-size: 0.5em;
+    }
+}
+
+@media only screen and (max-width: 50em) {
+    #container, #logo, main {
+        display: block;
+    }
+    
+    #container {
+        max-width: 30em;
+    }
+    
+    #logo, main {
+        width: auto;
+    }
+}

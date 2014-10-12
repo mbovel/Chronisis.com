@@ -1,0 +1,19 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Matthieu Bovel -- Design & Development -- https://github.com/mbovel
+
+# THANKS
+
+    Mathias Bynens, Cătălin Mariș, Hans Christian Reinl, Nicolas Gallagher, Paul Irish and Divya Manian -- HTML5 Boilerplate -- http://html5boilerplate.com
+    Nicolas Gallagher and Jonathan Neal -- Normalize.css -- http://necolas.github.io/normalize.css/
+    Multiple Designers -- Raleway -- http://www.google.com/fonts/specimen/Raleway
+    Dave Gandy -- Font Awesome -- http://fortawesome.github.io/Font-Awesome/
+
+# TECHNOLOGY
+
+    HTML5
+    @fontface
+    SVG
