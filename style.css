@@ -204,6 +204,7 @@ button:hover .icon {
 #time-rail {
 	width: 100%;
 	background-color: #57ccf0;
+	cursor: pointer;
 }
 #time {
 	background-color: #ff4b00;
@@ -211,12 +212,6 @@ button:hover .icon {
 }
 #loaded {
 	background-color: #57ccf0;
-}
-.playing #loaded {
-	cursor: pointer;
-}
-.playing #time-rail {
-	background-color: #999;
 }
 
 @media screen and (max-width: 80em) {

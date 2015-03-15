@@ -3,8 +3,7 @@
 add_action('wp_enqueue_scripts', function() {
 	wp_enqueue_style('chronisis_fonts', 'http://fonts.googleapis.com/css?family=Open+Sans:300', [], null, 'all');
 	wp_enqueue_style('chronisis', get_stylesheet_uri(), ['chronisis_fonts', 'normalize', 'base'], null, 'all');
-	wp_enqueue_script('sc', 'http://connect.soundcloud.com/sdk.js', [], null, true);
-	wp_enqueue_script('chronisis', get_stylesheet_directory_uri() . '/player.js', ['sc'], null, true);
+	wp_enqueue_script('chronisis', get_stylesheet_directory_uri() . '/player.js', [], null, true);
 });
 
 add_action('ba_header', function() {

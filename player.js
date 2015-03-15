@@ -6,6 +6,7 @@
 
 var tracks;
 var current = 0;
+var timeRailEl = document.getElementById("time-rail");
 var timeEl = document.getElementById("time");
 var loadedEl = document.getElementById("loaded");
 var prevEl = document.getElementById("prev");
@@ -26,7 +27,7 @@ var playing = false;
 /********************/
 
 prevEl.addEventListener("click", function(e) {
-	if(tracks[current].stream.position > 3000) {
+	if(tracks[current].audioEl.currentTime > 3) {
 		play(0, true);
 	}
 	else {
@@ -55,7 +56,7 @@ document.addEventListener("mouseup", function() {
 	event.preventDefault();
 });
 
-loadedEl.addEventListener("mousedown", function(e) {
+timeRailEl.addEventListener("mousedown", function(e) {
 	dragging = true;
 	
 	if(playing)
@@ -71,6 +72,33 @@ document.addEventListener("mousemove", function(e) {
 	event.preventDefault();
 });
 
+window.addEventListener('load', function(e) {
+	fetchJSONFile('http://api.soundcloud.com/users/chronisis/tracks?client_id=52baacfe62f29748af1aaa5bcad4fede', function(resp) {
+		tracks = resp;
+		
+		for(var i = 0; i < tracks.length; i++) {
+			tracks[i].audioEl = document.createElement('audio');
+			
+			tracks[i].audioEl.setAttribute('src', tracks[i].stream_url + '?client_id=52baacfe62f29748af1aaa5bcad4fede');
+					
+			// Media events
+			// https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
+			
+			tracks[i].audioEl.addEventListener('playing', function(e) {
+				timeAnimation();
+			});
+			
+			tracks[i].audioEl.addEventListener('pause', function(e) {
+				window.cancelAnimationFrame(timeAnimationRef);
+			});
+			
+			tracks[i].audioEl.addEventListener('ended', function(e) {
+				play(+1);
+			});
+		}
+	});
+});
+
 
 /*************/
 /* Functions */
@@ -79,84 +107,42 @@ document.addEventListener("mousemove", function(e) {
 function play(/*int*/ diff, /*bool*/ reset) {
 	reset = reset === undefined ? false : true;
 	
-	loadTracksIfNeeded(function() {
-		if(diff !== 0 || reset) {
-			tracks[current].stream.stop();
-		}
-		
-		current = ((current + diff) % tracks.length + tracks.length) % tracks.length;
-		
-		loadTrackIfNeeded(current, function() {
-			tracks[current].stream.play({
-				onfinish: function() {
-					play(+1);
-				}
-			});
-			
-			pageEl.classList.add("playing");
-			
-			if(playing) {
-				window.cancelAnimationFrame(timeAnimationRef);
-				window.cancelAnimationFrame(loadAnimationRef);
-			}
-			
-			currentSongEl.innerText = tracks[current].title;
-			currentSongEl.setAttribute('href', tracks[current].permalink_url);
-			currentSongContainerEl.style.width = currentSongEl.offsetWidth + 'px';
-			
-			playing = true;
-			
-			timeAnimation();
-			loadAnimation();
-		});
-	});
+	if(diff !== 0 || reset) {
+		// HTML5 Audio stop function
+		// http://stackoverflow.com/questions/14834520/html5-audio-stop-function
+		tracks[current].audioEl.pause();
+		tracks[current].audioEl.currentTime = 0;
+	}
+	
+	current = ((current + diff) % tracks.length + tracks.length) % tracks.length;
+	
+	tracks[current].audioEl.play();
+	
+	pageEl.classList.add("playing");
+	
+	currentSongEl.innerText = tracks[current].title;
+	currentSongEl.setAttribute('href', tracks[current].permalink_url);
+	currentSongContainerEl.style.width = currentSongEl.offsetWidth + 'px';
+	
+	playing = true;
 }
 
 function pause() {
 	playing = false;
-	tracks[current].stream.pause();
+	tracks[current].audioEl.pause();
 	pageEl.classList.remove("playing");
-	window.cancelAnimationFrame(timeAnimationRef);
-	window.cancelAnimationFrame(loadAnimationRef);
 	currentSongContainerEl.style.width = 0;
 }
 
-function loadTracksIfNeeded(/*function*/ callback) {
-	if(tracks === undefined) {
-		SC.initialize({
-		  client_id: '52baacfe62f29748af1aaa5bcad4fede'
-		});
-		
-		SC.get('/users/chronisis/tracks', function(resp) {
-			tracks = resp;
-			callback();
-		});
-	}
-	else {
-		callback();
-	}
-}
-
-function loadTrackIfNeeded(/*int*/ index, /*function*/ callback) {
-	if(tracks[index].stream === undefined) {
-		SC.stream('/tracks/' + tracks[index].id, function(resp){
-			tracks[index].stream = resp;
-			callback();
-		});
-	}
-	else {
-		callback();
-	}
-}
-
 function timeAnimation() {
-	var progression = tracks[current].stream.position / tracks[current].duration;
+	var progression = tracks[current].audioEl.currentTime / tracks[current].audioEl.duration;
 	timeEl.style.width = progression * 100 + '%';
 	timeAnimationRef = window.requestAnimationFrame(timeAnimation);
 }
 
 function loadAnimation() {
-	var progression = tracks[current].stream.duration / tracks[current].duration;
+	var progression = tracks[current].audioEl.buffered.length / tracks[current].audioEl.duration;
+	console.log(tracks[current].audioEl.buffered.length - 1);
 	loadedEl.style.width = progression * 100 + '%';
 	
 	if(progression < 1)
@@ -164,16 +150,26 @@ function loadAnimation() {
 }
 
 function handleSeek(/*Event*/ e) {
-	var duration = (e.pageX / document.body.clientWidth) * tracks[current].duration;
-	tracks[current].stream.setPosition(duration);
-	
-	console.log(tracks[current].stream);
-	
-	if(tracks[current].stream.playState !== 1) {
-		tracks[current].stream.play();
-	}
+	var duration = (e.pageX / document.body.clientWidth) * tracks[current].audioEl.duration;
+	tracks[current].audioEl.currentTime = duration;
 	
 	e.preventDefault();
+}
+
+// How do i load a JSON object from a file with ajax?
+// http://stackoverflow.com/a/14388512
+function fetchJSONFile(path, callback) {
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.onreadystatechange = function() {
+        if (httpRequest.readyState === 4) {
+            if (httpRequest.status === 200) {
+                var data = JSON.parse(httpRequest.responseText);
+                if (callback) callback(data);
+            }
+        }
+    };
+    httpRequest.open('GET', path);
+    httpRequest.send(); 
 }
 
 })(document, window);

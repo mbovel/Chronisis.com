@@ -94,7 +94,6 @@ if( have_posts()) : while ( have_posts() ) : the_post();
 		
 		<?php the_content(); ?>
 		
-		<!--<iframe id="soundcloud" crolling="no" frameborder="no" src="https://w.soundcloud.com/player/?theme_color=57ccf0&color=57ccf0&show_user=false&show_artwork=false&show_playcount=false&show_bpm=false&show_comments=false&url=https%3A//api.soundcloud.com/users/5107697"></iframe>-->
 		<div id="controlls">
 			<button id="prev">
 				<svg x="0px" y="0px" viewBox="0 0 56.4 32.8" class="icon icon-prev">
