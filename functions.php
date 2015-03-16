@@ -7,7 +7,13 @@ add_action('wp_enqueue_scripts', function() {
 });
 
 add_action('ba_header', function() {
-    echo '<img src="' . get_stylesheet_directory_uri() . '/logo.png" alt="Chronisis" />';
+	if(is_front_page())
+    	echo '<h1><span id="alt-logo">Chronisis</span>';
+    
+    echo '<img src="' . get_stylesheet_directory_uri() . '/logo.png" alt="Chronisis" id="logo" />';
+    
+    if(is_front_page())
+    	echo '</h1>';
 });
 
 add_action('ba_footer', function() {
