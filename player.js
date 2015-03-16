@@ -75,27 +75,6 @@ document.addEventListener("mousemove", function(e) {
 window.addEventListener('load', function(e) {
 	fetchJSONFile('http://api.soundcloud.com/users/chronisis/tracks?client_id=52baacfe62f29748af1aaa5bcad4fede', function(resp) {
 		tracks = resp;
-		
-		for(var i = 0; i < tracks.length; i++) {
-			tracks[i].audioEl = document.createElement('audio');
-			
-			tracks[i].audioEl.setAttribute('src', tracks[i].stream_url + '?client_id=52baacfe62f29748af1aaa5bcad4fede');
-					
-			// Media events
-			// https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
-			
-			tracks[i].audioEl.addEventListener('playing', function(e) {
-				timeAnimation();
-			});
-			
-			tracks[i].audioEl.addEventListener('pause', function(e) {
-				window.cancelAnimationFrame(timeAnimationRef);
-			});
-			
-			tracks[i].audioEl.addEventListener('ended', function(e) {
-				play(+1);
-			});
-		}
 	});
 });
 
@@ -115,6 +94,10 @@ function play(/*int*/ diff, /*bool*/ reset) {
 	}
 	
 	current = ((current + diff) % tracks.length + tracks.length) % tracks.length;
+	
+	if(tracks[current].audioEl === undefined) {
+		loadTrack(current);
+	}
 	
 	tracks[current].audioEl.play();
 	
@@ -140,13 +123,25 @@ function timeAnimation() {
 	timeAnimationRef = window.requestAnimationFrame(timeAnimation);
 }
 
-function loadAnimation() {
-	var progression = tracks[current].audioEl.buffered.length / tracks[current].audioEl.duration;
-	console.log(tracks[current].audioEl.buffered.length - 1);
-	loadedEl.style.width = progression * 100 + '%';
+function loadTrack(i) {
+	tracks[i].audioEl = document.createElement('audio');
 	
-	if(progression < 1)
-		loadAnimationRef = window.requestAnimationFrame(loadAnimation);
+	tracks[i].audioEl.setAttribute('src', tracks[i].stream_url + '?client_id=52baacfe62f29748af1aaa5bcad4fede');
+			
+	// Media events
+	// https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
+	
+	tracks[i].audioEl.addEventListener('playing', function(e) {
+		timeAnimation();
+	});
+	
+	tracks[i].audioEl.addEventListener('pause', function(e) {
+		window.cancelAnimationFrame(timeAnimationRef);
+	});
+	
+	tracks[i].audioEl.addEventListener('ended', function(e) {
+		play(+1);
+	});
 }
 
 function handleSeek(/*Event*/ e) {
